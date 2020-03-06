@@ -45,8 +45,10 @@ inline void selects(int length,Number *c,Bit *bit,Number *a,Number *b){
 }
 
 inline Number Number::operator-() const{
-	Number zero;
-	return zero-*this;
+	Number tmp;
+	tmp=tmp-*this;
+	modBlock(tmp.mask);
+	return tmp;
 }
 
 inline int Number::reveal()const{
@@ -58,9 +60,7 @@ inline Number project(const Number &a,int length,const int *x,const int *y){
 	return ArithmeticExecution::ari_exec->proj_gate(a,length,x,y);
 }
 
-inline Number t_max(const Number &a,const Number &b,int lower,int upper){
 
-}
 /*
 
 inline Number Number::operator*(const Number& rhs) const{

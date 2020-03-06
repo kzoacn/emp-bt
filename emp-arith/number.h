@@ -48,8 +48,7 @@ class Number{ public:
 };
 inline Number b2a(Integer x);
 //inline Integer a2b(const Number &x,int length);
-inline Number project(const Number &a,int length,const int *x,const int *y);// x[i] -> y[i]
-inline Number t_max(const Number &a,const Number &b,int lower,int upper);
+inline Number project(const Number &a,int length,const int *x,const int *y);// x[i] -> y[i] 
 #include "emp-arith/number.hpp"
 }
 #endif

@@ -18,6 +18,8 @@ public:
 		tmp.random_block(&a, 1);
 		*((char *) &a) |= 0x01;
 		tmp.random_block(&b, 1);
+		modBlock(b);
+
 		set_delta(a,b);
 		eq_hash.reset();
 	}
@@ -51,7 +53,7 @@ public:
 			if(i==0){
 				prg2.random_block(&powerOf2[0].mask, 1);
 				modBlock(powerOf2[0].mask);
-				delta2k[0]=mdelta;
+				delta2k[0]=this->mdelta;
 				powerOf2[0].mask=subBlocks(powerOf2[0].mask,mdelta);
 			}else{
 				delta2k[i]=addBlocks(delta2k[i-1],delta2k[i-1]);
@@ -138,53 +140,51 @@ public:
 	}
 	void set_gate(long long x,Number &a){
 		prg.random_block(&a.mask,1);
-		modBlock(a.mask);
-		block xdelta=zero_block(); 
-		for(int i=0;i<BITLENGTH;i++){
-			if(x>>i&1)
-				xdelta=addBlocks(xdelta,delta2k[i]);
-		}
-		block t=addBlocks(a.mask,xdelta); 
-		io->send_block(&t,1);
-		
+		modBlock(a.mask);  
+		block xdelta; 
+		xdelta=mulCBlocks(mdelta,x);
+		xdelta=addBlocks(xdelta,a.mask);
+		io->send_block(&xdelta,1);		
+	
 	}
 	int reveal_gate(const Number &a){
 		block tmp;
 		io->recv_block(&tmp,1);
-		block val=subBlocks(tmp,a.mask); 
-		long long v=get_val(val),t=0;
-		long long d=get_val(mdelta);
+		block val=subBlocks(tmp,a.mask);
+		modBlock(val); 
+		long long v=(get_val(val)%MOD+MOD)%MOD,t=0;
+		long long d=get_val(mdelta)%MOD;
 		// v*inv(d) mod MOD
 		// stupid version
 		// TODO 	
 		for(int i=0;i<100;i++){
 			if(t%MOD==v)
 				return i;
+			if((MOD-t)%MOD==v)
+				return -i;
 			t=(t+d)%MOD;
 		}
-		return -1;		
+		return -233;		
 	}
 	Number proj_gate(const Number &a,int length,const int *x,const int *y){
 		
 		Number b;
 		prg.random_block(&b.mask,1);
+		
 		modBlock(b.mask);
 		// a+xdeleta ->  b+ydelta
 		block xdelta[BITLENGTH];
 		block ydelta[BITLENGTH];
-			printBlock(a.mask);
+		
+
+		delta2k[BITLENGTH-1]=-delta2k[BITLENGTH-1];
 		for(int i=0;i<length;i++){
-			xdelta[i]=a.mask;
-			ydelta[i]=b.mask; 
-			for(int j=0;j<20;j++){//TODO
-				if(x[i]>>j&1){
-					xdelta[i]=addBlocks(xdelta[i],delta2k[j]);
-				}
-				if(y[i]>>j&1)
-					ydelta[i]=addBlocks(ydelta[i],delta2k[j]);
-			}
- 
+			 
+			xdelta[i]=addBlocks(a.mask,mulCBlocks(mdelta,x[i]));
+			ydelta[i]=addBlocks(b.mask,mulCBlocks(mdelta,y[i]));
+			
 		}
+		delta2k[BITLENGTH-1]=-delta2k[BITLENGTH-1];
 		for(int i=0;i<length;i++){
 
 			block h[2],t[2];

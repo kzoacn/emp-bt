@@ -44,6 +44,23 @@ inline block subBlocks(const block &x,const block &y) {
 inline block addCBlocks(const block &x,long long y) {
     return addBlocks(x,_mm_set_epi64x(y,y));
 }
+inline block mulCBlocks(const block &x,long long y) {
+    int flag=1;
+    if(y<0){
+        flag=-1;
+        y=-y;
+    }
+    block c=zero_block(),t=x;
+    for(int i=0;i<64;i++){
+        if(y>>i&1)
+            c=addBlocks(c,t);
+        t=addBlocks(t,t);
+    }
+    if(flag==-1)
+        c=_mm_sub_epi64(P,c);
+    modBlock(c);
+    return c;
+}
 
 inline block clear_high(const block &val){//TODO  40bit
     block t=_mm_and_si128(val,_mm_set_epi64x(0,-1));

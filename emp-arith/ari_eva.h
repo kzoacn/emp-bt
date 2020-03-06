@@ -94,7 +94,7 @@ class AriEva  :public ArithmeticExecution{ public:
 	}
 
 	void set_gate(long long x,Number &a){
-		io->recv_block(&a.mask,1);
+		io->recv_block(&a.mask,1); 
 	}
 
 	void sels_gate(int length,Number *c,const Bit *bits,const Number *a,const Number *b){
@@ -146,12 +146,10 @@ class AriEva  :public ArithmeticExecution{ public:
 		
 		
 		Number b;
-		block h[2];
+		block h[2]; 
 		h[0]=hash_with_idx(a.mask,gid,&prp.aes);
 		h[1]=hash_with_idx(xorBlocks(a.mask,one_block()),gid,&prp.aes);
-
-			puts("bob get");
-			printBlock(a.mask); 
+ 
 
 		for(int i=0;i<length;i++){
 
