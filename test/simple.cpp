@@ -42,19 +42,14 @@ int main(int argc, char** argv) {
  
 
 
-	Number a=Number(BITLENGTH,2,ALICE);
-	Number b=Number(BITLENGTH,1,ALICE);
+	Number a=Number(BITLENGTH,23,ALICE);
+	Number b=Number(BITLENGTH,-33,ALICE);
 
 
-	cout<<a.reveal()<<endl;
-
-	int cx[5]={-2,-1,0,1,2};
-	int cy[5]={0,0,0,1,2};
-
-	int r=project(a,5,cx,cy).reveal();
+	int r=(a+b).reveal();
 
 	if(party==ALICE)
-		cout<< r <<endl;
+		myassert(r==-10);
 	
 
 	for(int i=-5;i<5;i++)
@@ -63,8 +58,9 @@ int main(int argc, char** argv) {
 		Number b(BITLENGTH,j,BOB);
 		Number c=t_max(a,b);
 		int r=c.reveal();
-		if(party==ALICE)
-			cout<< i << " " << j <<" " << r <<endl;
+		if(party==ALICE){
+			myassert(r==max(i,j));
+		}
 
 	}
 
