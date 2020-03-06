@@ -33,3 +33,4 @@ macro (add_test _name)
 endmacro()
  
 add_test (simple) 
+add_test (editdis) 

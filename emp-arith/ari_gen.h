@@ -157,7 +157,7 @@ public:
 		// v*inv(d) mod MOD
 		// stupid version
 		// TODO 	
-		for(int i=0;i<100;i++){
+		for(int i=0;i<1000;i++){
 			if(t%MOD==v)
 				return i;
 			if((MOD-t)%MOD==v)
