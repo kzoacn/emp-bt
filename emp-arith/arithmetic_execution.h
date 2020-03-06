@@ -12,10 +12,12 @@ public:
 	virtual void sub_gate(Number &c,const Number &a,const Number &b)=0;
 	virtual void sel_gate(Number &z,const Bit &b,const Number &x,const Number &y)=0;
 	virtual void sels_gate(int length,Number *c,const Bit *bits,const Number *a,const Number *b)=0;
-	virtual Number b2a_gate(const Integer &x)=0;
-	virtual Integer a2b_gate(int length,const Number &val)=0;
+	virtual Number b2a_gate(const Integer &x)=0; 
+	virtual int reveal_gate(const Number &a)=0;
+	virtual void set_gate(long long x,Number &a)=0;
 	virtual bool eq(const Number &a,const Number &b)=0;
 	virtual bool is_true(const Bit &bit)=0;
+	virtual Number proj_gate(const Number &a,int length,const int *x,const int *y)=0;
 	virtual ~ArithmeticExecution (){ }
 };
 }

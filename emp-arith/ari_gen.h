@@ -1,18 +1,18 @@
-#ifndef ARI_PRIVACY_FREE_GEN_H__
-#define ARI_PRIVACY_FREE_GEN_H__
+#ifndef ARI_GEN_H__
+#define ARI_GEN_H__
 #include "emp-tool/emp-tool.h"
-#include "emp-azkgc/numeric.h"
-#include "emp-azkgc/hash_idx.h"
+#include "emp-arith/numeric.h"
+#include "emp-arith/hash_idx.h"
 #include <iostream>
 
 namespace emp {
 template<typename T>
-class AriPrivacyFreeGen: public ArithmeticExecution{ 
+class AriGen: public ArithmeticExecution{ 
 public:
 	PRP prp;
 	T * io;
 	int64_t gid = 0;
-	AriPrivacyFreeGen(T * io) :io(io) {
+	AriGen(T * io) :io(io) {
 		PRG tmp;
 		block a,b;
 		tmp.random_block(&a, 1);
@@ -29,6 +29,7 @@ public:
 	Number zeros[LOGMOD];
 	block delta;
 	vector<char>buffer;
+	PRG prg;
 	bool is_public(const block & b, int party) {
 		return false;
 	}
@@ -50,8 +51,10 @@ public:
 			if(i==0){
 				prg2.random_block(&powerOf2[0].mask, 1);
 				modBlock(powerOf2[0].mask);
+				delta2k[0]=mdelta;
 				powerOf2[0].mask=subBlocks(powerOf2[0].mask,mdelta);
 			}else{
+				delta2k[i]=addBlocks(delta2k[i-1],delta2k[i-1]);
 				add_gate(powerOf2[i],powerOf2[i-1],powerOf2[i-1]);
 			}
 		}
@@ -133,10 +136,68 @@ public:
 			c=c+res[i];
 		return c;
 	}
+	void set_gate(long long x,Number &a){
+		prg.random_block(&a.mask,1);
+		modBlock(a.mask);
+		block xdelta=zero_block(); 
+		for(int i=0;i<BITLENGTH;i++){
+			if(x>>i&1)
+				xdelta=addBlocks(xdelta,delta2k[i]);
+		}
+		block t=addBlocks(a.mask,xdelta); 
+		io->send_block(&t,1);
+		
+	}
+	int reveal_gate(const Number &a){
+		block tmp;
+		io->recv_block(&tmp,1);
+		block val=subBlocks(tmp,a.mask); 
+		long long v=get_val(val),t=0;
+		long long d=get_val(mdelta);
+		// v*inv(d) mod MOD
+		// stupid version
+		// TODO 	
+		for(int i=0;i<100;i++){
+			if(t%MOD==v)
+				return i;
+			t=(t+d)%MOD;
+		}
+		return -1;		
+	}
+	Number proj_gate(const Number &a,int length,const int *x,const int *y){
+		
+		Number b;
+		prg.random_block(&b.mask,1);
+		modBlock(b.mask);
+		// a+xdeleta ->  b+ydelta
+		block xdelta[BITLENGTH];
+		block ydelta[BITLENGTH];
+			printBlock(a.mask);
+		for(int i=0;i<length;i++){
+			xdelta[i]=a.mask;
+			ydelta[i]=b.mask; 
+			for(int j=0;j<20;j++){//TODO
+				if(x[i]>>j&1){
+					xdelta[i]=addBlocks(xdelta[i],delta2k[j]);
+				}
+				if(y[i]>>j&1)
+					ydelta[i]=addBlocks(ydelta[i],delta2k[j]);
+			}
+ 
+		}
+		for(int i=0;i<length;i++){
 
-	Integer a2b_gate(int length,const Number &v){
-		long long vv=get_val(v.val);
-		return Integer(length,vv>=HALFMOD ? vv-MOD : vv,PROVER);
+			block h[2],t[2];
+			h[0]=hash_with_idx(xdelta[i],gid,&prp.aes);
+			h[1]=hash_with_idx(xorBlocks(xdelta[i],one_block()),gid,&prp.aes);
+
+			t[0]=xorBlocks(h[0],ydelta[i]);
+			t[1]=h[1]; 
+			io->send_block(t,2);
+		}
+		gid++;
+		//TODO shuffle
+		return b;
 	}
 
 	Hash eq_hash;
@@ -154,4 +215,4 @@ public:
 }
 
 
-#endif// PRIVACY_FREE_GEN_H__
+#endif// GEN_H__

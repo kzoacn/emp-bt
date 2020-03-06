@@ -3,9 +3,7 @@
 #include "emp-tool/emp-tool.h"
 
 namespace emp {
-
-const static int PROVER = 1;
-const static int VERIFIER = 2;
+ 
 
 #define MOD ((1LL<<61)-1)
 #define HALFMOD (MOD>>1)
@@ -47,9 +45,27 @@ inline block addCBlocks(const block &x,long long y) {
     return addBlocks(x,_mm_set_epi64x(y,y));
 }
 
+inline block clear_high(const block &val){//TODO  40bit
+    block t=_mm_and_si128(val,_mm_set_epi64x(0,-1));
+    return t;
+}
+inline bool is_high_clear(const block &val){ 
+    long long *vv=(long long*)&val;
+    return vv[1]==0;
+}
+
 long long get_val(const block &val) {
     long long *vv=(long long*)&val;
     return *vv;
+}
+
+long long get_low(const block &val) {
+    long long *vv=(long long*)&val;
+    return *vv;
+}
+long long get_high(const block &val) {
+    long long *vv=(long long*)&val;
+    return vv[1];
 }
 
 }

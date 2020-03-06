@@ -1,4 +1,4 @@
-# emp-azkgc [![Build Status](https://kzoacn.visualstudio.com/emp-azkgc/_apis/build/status/kzoacn.emp-azkgc?branchName=master)](https://kzoacn.visualstudio.com/emp-azkgc/_build/latest?definitionId=1&branchName=master)
+# emp-arith [![Build Status](https://kzoacn.visualstudio.com/emp-arith/_apis/build/status/kzoacn.emp-arith?branchName=master)](https://kzoacn.visualstudio.com/emp-arith/_build/latest?definitionId=1&branchName=master)
 
 <img src="https://raw.githubusercontent.com/emp-toolkit/emp-readme/master/art/logo-full.jpg" width=300px/>
 
@@ -7,8 +7,8 @@
 1. Install prerequisites using instructions [here](https://github.com/emp-toolkit/emp-readme).
 2. Install [emp-tool](https://github.com/emp-toolkit/emp-tool).
 3. Install [emp-ot](https://github.com/emp-toolkit/emp-ot).
-4. git clone https://github.com/emp-toolkit/emp-azkgc.git
-5. cd emp-azkgc && cmake . && sudo make install
+4. git clone https://github.com/emp-toolkit/emp-arith.git
+5. cd emp-arith && cmake . && sudo make install
 
 ## Test
 

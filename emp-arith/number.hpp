@@ -1,11 +1,11 @@
 
-Number::Number(int length, long long input, int party = PROVER){
-        Integer t(length,input,party);
-        *this=b2a(t);
-}
-Number::Number(const long long &x){
-        Integer t(BITLENGTH,x,PROVER);
-        *this=b2a(t);
+Number::Number(int length, long long input, int party){
+		if(party==ALICE){
+			ArithmeticExecution::ari_exec->set_gate(input,*this);
+		}else{
+			Integer t(length,input,party);
+			*this=b2a(t);
+		}
 }
 inline Number Number::operator+(const Number& rhs) const {
 	Number res;
@@ -21,7 +21,7 @@ inline Number Number::operator-(const Number& rhs) const {
 inline Number b2a(Integer x){
 	return ArithmeticExecution::ari_exec->b2a_gate(x);
 }
-inline Integer a2b(int length,const Number &x){
+/*inline Integer a2b(int length,const Number &x){
 
 	Integer res=ArithmeticExecution::ari_exec->a2b_gate(length,x);
 	Number tmp=b2a(res);
@@ -30,7 +30,7 @@ inline Integer a2b(int length,const Number &x){
 		throw;
 
 	return res;
-}
+}*/
 inline Number Number::select(Bit bit,Number rhs)const{
 	Number res;
 	ArithmeticExecution::ari_exec->sel_gate(res,bit,rhs,*this);
@@ -44,6 +44,24 @@ inline void selects(int length,Number *c,Bit *bit,Number *a,Number *b){
 	
 }
 
+inline Number Number::operator-() const{
+	Number zero;
+	return zero-*this;
+}
+
+inline int Number::reveal()const{
+	return ArithmeticExecution::ari_exec->reveal_gate(*this);
+}
+
+
+inline Number project(const Number &a,int length,const int *x,const int *y){
+	return ArithmeticExecution::ari_exec->proj_gate(a,length,x,y);
+}
+
+inline Number t_max(const Number &a,const Number &b,int lower,int upper){
+
+}
+/*
 
 inline Number Number::operator*(const Number& rhs) const{
 	Integer x=a2b(BITLENGTH,rhs);
@@ -67,10 +85,6 @@ inline Number Number::operator*(const Integer& rhs) const{
 	return res;
 }
 
-inline Number Number::operator-() const{
-	Number zero;
-	return zero-*this;
-}
 
 inline Bit Number::operator==(const Number& rhs) const{
 	Integer t=a2b(BITLENGTH,*this-rhs);
@@ -192,3 +206,5 @@ inline Number Number::sqrt()const{
 	ArithmeticExecution::ari_exec->is_true(*this<(sqrtv+one)*(sqrtv+one));
 	return sqrtv;
 }
+
+*/

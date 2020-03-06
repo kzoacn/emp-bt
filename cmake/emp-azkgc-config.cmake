@@ -1,13 +1,13 @@
 find_package(emp-ot)
 
-find_path(emp-azkgc_INCLUDE_DIR emp-azkgc/emp-azkgc.h)
+find_path(emp-arith_INCLUDE_DIR emp-arith/emp-arith.h)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(emp-azkgc DEFAULT_MSG emp-azkgc_INCLUDE_DIR)
+find_package_handle_standard_args(emp-arith DEFAULT_MSG emp-arith_INCLUDE_DIR)
 
-find_library(EMP-AZKGC_LIBRARY NAMES emp-azkgc)
+find_library(EMP-arith_LIBRARY NAMES emp-arith)
 
-if(emp-azkgc_FOUND)
-	set(emp-azkgc_INCLUDE_DIRS ${emp-azkgc_INCLUDE_DIR}/include/ ${EMP-OT_INCLUDE_DIRS})
-	set(EMP-AZKGC_LIBRARIES ${EMP-OT_LIBRARIES} ${EMP-AZKGC_LIBRARY}$)
+if(emp-arith_FOUND)
+	set(emp-arith_INCLUDE_DIRS ${emp-arith_INCLUDE_DIR}/include/ ${EMP-OT_INCLUDE_DIRS})
+	set(EMP-arith_LIBRARIES ${EMP-OT_LIBRARIES} ${EMP-arith_LIBRARY}$)
 endif()

@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.8.11)
-project (emp-azkgc)
-set(NAME "emp-azkgc")
+project (emp-arith)
+set(NAME "emp-arith")
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	if(NOT DEFINED OPENSSL_ROOT_DIR)
 		set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl")	
@@ -16,14 +16,14 @@ include(${CMAKE_FOLDER}/cmake/threading.cmake)
 find_package(emp-ot REQUIRED)
 include_directories(${EMP-OT_INCLUDE_DIRS})
 
-set(sources_zk
- emp-azkgc/emp-azkgc.cpp
+set(sources
+ emp-arith/emp-arith.cpp
 )
-add_library(${NAME} SHARED ${sources_zk})
+add_library(${NAME} SHARED ${sources})
 
 # Installation
-install(FILES cmake/emp-azkgc-config.cmake DESTINATION cmake/)
-install(DIRECTORY emp-azkgc DESTINATION include/)
+install(FILES cmake/emp-arith-config.cmake DESTINATION cmake/)
+install(DIRECTORY emp-arith DESTINATION include/)
 install(TARGETS ${NAME} DESTINATION lib/)
 
 # Test cases
@@ -31,12 +31,5 @@ macro (add_test _name)
   add_executable(${_name} "test/${_name}.cpp")
   target_link_libraries(${_name} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${GMP_LIBRARIES} ${NAME} ${EMP-OT_LIBRARIES})
 endmacro()
-
-add_test (int)
-add_test (neg)
-add_test (root)
-add_test (num)
-add_test (real)
-add_test (bench)
-add_test (simple)
-add_test (mem)
+ 
+add_test (simple) 

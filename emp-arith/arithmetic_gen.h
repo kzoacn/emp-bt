@@ -2,9 +2,8 @@
 #define ARITHMETICZK_GEN_H__
 #include <emp-tool/emp-tool.h>
 #include <emp-ot/emp-ot.h>
-#include "emp-azkgc/ari_privacy_free_gen.h"
-#include <iostream>
-#include "emp-azkgc/thread_buffer.h"
+#include "emp-arith/ari_gen.h"
+#include <iostream> 
 
 namespace emp {
 template<typename IO>
@@ -13,9 +12,9 @@ public:
 	IO* io;
 	SHOTExtension<IO> * ot;//TODO SHOT/MOT
 	PRG prg, shared_prg;
-	AriPrivacyFreeGen<IO> *gc;
+	AriGen<IO> *gc;
     block seed;
-	ArithmeticZKGen(IO* io, AriPrivacyFreeGen<IO>* gc): ProtocolExecution(VERIFIER) {
+	ArithmeticZKGen(IO* io, AriGen<IO>* gc): ProtocolExecution(ALICE) {
 		this->io = io;
 		ot = new SHOTExtension<IO>(io);
 		this->gc = gc;	
@@ -37,26 +36,13 @@ public:
 	~ArithmeticZKGen() {
 		delete ot;
 	} 
-	std::queue<block> lbuf;
-	bool tmp[THREAD_BUFFER_SIZE];
-	block btmp[THREAD_BUFFER_SIZE];
+
 
 	void feed(block * label, int party, const bool* b, int length) {
 
-		if(length>(int)lbuf.size()){
-			int size;
-			io->recv_data(&size,4);
-			ot->send_cot(btmp, gc->delta, size);
-			for(int i=0;i<size;i++){
-				*((char*)&btmp[i])&=0xfe;
-				lbuf.push(btmp[i]);
-			}
-			
-		}
-		for(int i=0;i<length;i++){
-			label[i]=lbuf.front();
-			lbuf.pop();
-		}
+		ot->send_cot(label,gc->delta,length);
+		for(int i=0;i<length;i++)
+			*((char*)&label[i])&=0xfe;
 
 	}
 

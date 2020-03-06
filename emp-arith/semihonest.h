@@ -1,7 +1,7 @@
 #ifndef SEMIHONEST_H__
 #define SEMIHONEST_H__
-#include "emp-azkgc/semihonest_gen.h"
-#include "emp-azkgc/semihonest_eva.h"
+#include "emp-arith/semihonest_gen.h"
+#include "emp-arith/semihonest_eva.h"
 
 namespace emp {
 template<typename IO>

@@ -1,5 +1,5 @@
-#ifndef ARI_PRIVACY_FREE_EVA_H__
-#define ARI_PRIVACY_FREE_EVA_H__
+#ifndef ARI_EVA_H__
+#define ARI_EVA_H__
 #include "emp-tool/io/io_channel.h"
 #include "emp-tool/io/net_io_channel.h"
 #include "emp-tool/io/file_io_channel.h"
@@ -8,14 +8,14 @@
 #include "emp-tool/utils/prp.h"
 #include "emp-tool/utils/hash.h"
 #include "emp-tool/execution/circuit_execution.h"
-#include "emp-azkgc/arithmetic_execution.h"
+#include "emp-arith/arithmetic_execution.h"
 #include "emp-tool/garble/garble_gate_privacy_free.h"
-#include "emp-azkgc/hash_idx.h"
+#include "emp-arith/hash_idx.h"
 #include <iostream>
 
 namespace emp {
 template<typename T>
-class AriPrivacyFreeEva  :public ArithmeticExecution{ public:
+class AriEva  :public ArithmeticExecution{ public:
 	PRP prp;
 	T * io;
 	int64_t gid = 0;
@@ -27,7 +27,7 @@ class AriPrivacyFreeEva  :public ArithmeticExecution{ public:
 	Number zeros[LOGMOD];
 	vector<char>buffer;
 	Hash recv_h;
-	AriPrivacyFreeEva(T * io) :io(io) {
+	AriEva(T * io) :io(io) {
 		PRG prg2(fix_key);prg2.random_block(constant, 2);
 		*((char *) &constant[0]) &= 0xfe;
        	*((char *) &constant[1]) |= 0x01;
@@ -38,7 +38,7 @@ class AriPrivacyFreeEva  :public ArithmeticExecution{ public:
 			if(i==0){
 				prg2.random_block(&powerOf2[0].mask, 1);
 				modBlock(powerOf2[0].mask);
-				powerOf2[0].val=makeBlock(0,1);
+				//powerOf2[0].val=makeBlock(0,1);
 			}else{
 				add_gate(powerOf2[i],powerOf2[i-1],powerOf2[i-1]);
 			}
@@ -68,11 +68,11 @@ class AriPrivacyFreeEva  :public ArithmeticExecution{ public:
     */
 	void add_gate(Number &c,const Number &a,const Number &b){
         c.mask=addBlocks(a.mask,b.mask);
-        c.val=addBlocks(a.val,b.val);
+        //c.val=addBlocks(a.val,b.val);
 	}
 	void sub_gate(Number &c,const Number &a,const Number &b){
         c.mask=subBlocks(a.mask,b.mask);
-        c.val=subBlocks(a.val,b.val);
+        //c.val=subBlocks(a.val,b.val);
 	}
 	void sel_gate(Number &z,const Bit &b,const Number &x,const Number &y){
 		
@@ -87,12 +87,15 @@ class AriPrivacyFreeEva  :public ArithmeticExecution{ public:
 		if(getLSB(b.bit)){
 			z.mask=addBlocks(z.mask,R);
 			z.mask=addBlocks(z.mask,diff);
-			z.val=x.val;
+			//z.val=x.val;
 		}else{
-			z.val=y.val;
+			//z.val=y.val;
 		}
 	}
 
+	void set_gate(long long x,Number &a){
+		io->recv_block(&a.mask,1);
+	}
 
 	void sels_gate(int length,Number *c,const Bit *bits,const Number *a,const Number *b){
 		
@@ -115,9 +118,9 @@ class AriPrivacyFreeEva  :public ArithmeticExecution{ public:
 			if(getLSB(bits[i].bit)){
 				c[i].mask=addBlocks(c[i].mask,R);
 				c[i].mask=addBlocks(c[i].mask,diff);
-				c[i].val=a[i].val;
+				//c[i].val=a[i].val;
 			}else{
-				c[i].val=b[i].val;
+				//c[i].val=b[i].val;
 			}
 		}
 	}
@@ -133,10 +136,40 @@ class AriPrivacyFreeEva  :public ArithmeticExecution{ public:
 	}
 
 
-	Integer a2b_gate(int length,const Number &v){
-		long long vv=get_val(v.val);
-		return Integer(length,vv>=HALFMOD ? vv-MOD : vv,PROVER);
+	int reveal_gate(const Number &a){
+		io->send_block(&a.mask,1);
+		return 0;
 	}
+	
+	
+	Number proj_gate(const Number &a,int length,const int *x,const int *y){
+		
+		
+		Number b;
+		block h[2];
+		h[0]=hash_with_idx(a.mask,gid,&prp.aes);
+		h[1]=hash_with_idx(xorBlocks(a.mask,one_block()),gid,&prp.aes);
+
+			puts("bob get");
+			printBlock(a.mask); 
+
+		for(int i=0;i<length;i++){
+
+			block t[2];
+			io->recv_block(t,2);
+
+			if(cmpBlock(&h[1],&t[1],1)){
+				b.mask=xorBlocks(h[0],t[0]);
+			}
+
+		}
+		gid++;
+
+		return b;
+	}
+
+
+
 	Hash eq_hash;
 	bool eq(const Number &a,const Number &b){
 		Number diff=a-b;
@@ -149,4 +182,4 @@ class AriPrivacyFreeEva  :public ArithmeticExecution{ public:
 	}
 };
 }
-#endif// PRIVACY_FREE_EVA_H__
+#endif// EVA_H__
