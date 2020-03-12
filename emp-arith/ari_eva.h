@@ -138,7 +138,9 @@ class AriEva  :public ArithmeticExecution{ public:
 
 	int reveal_gate(const Number &a){
 		io->send_block(&a.mask,1);
-		return 0;
+		int ans=-233;
+		io->recv_data(&ans,4);
+		return ans;
 	}
 	
 	

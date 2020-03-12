@@ -157,14 +157,23 @@ public:
 		// v*inv(d) mod MOD
 		// stupid version
 		// TODO 	
-		for(int i=0;i<1000;i++){
-			if(t%MOD==v)
-				return i;
-			if((MOD-t)%MOD==v)
-				return -i;
+
+
+		int ans=-233;
+
+		for(int i=0;i<3000;i++){
+			if(t%MOD==v){
+				ans=i;
+				break;
+			}
+			if((MOD-t)%MOD==v){
+				ans=-i;
+				break;
+			}
 			t=(t+d)%MOD;
 		}
-		return -233;		
+		io->send_data(&ans,4);
+		return ans;		
 	}
 	Number proj_gate(const Number &a,int length,const int *x,const int *y){
 		
