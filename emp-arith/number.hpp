@@ -59,8 +59,7 @@ inline int Number::reveal()const{
 inline Number project(const Number &a,int length,const int *x,const int *y){
 	return ArithmeticExecution::ari_exec->proj_gate(a,length,x,y);
 }
-
-
+ 
 /*
 
 inline Number Number::operator*(const Number& rhs) const{

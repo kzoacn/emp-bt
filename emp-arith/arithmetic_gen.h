@@ -37,6 +37,7 @@ public:
 		delete ot;
 	} 
 
+	
 
 	void feed(block * label, int party, const bool* b, int length) {
 

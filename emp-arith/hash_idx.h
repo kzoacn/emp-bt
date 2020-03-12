@@ -27,6 +27,29 @@ static inline block hash_with_idx(block A,uint64_t idx, const AES_KEY *key) {
     return HA;
 }
 
+static inline void hash_with_indices_fix(int length,block *H,const block *A,uint64_t idx, const AES_KEY *key) {//TOOD buffer
+
+	block* tweak=new block[length];
+
+	for(int i=0;i<length;i++)
+		tweak[i] = makeBlock(2 * idx, (long) 0);
+
+	
+	block *masks=new block[length];
+	block *keys=new block[length];
+
+	for(int i=0;i<length;i++)
+		masks[i] = keys[i] = xorBlocks(double_block(A[i]), tweak[i]);
+
+	AES_ecb_encrypt_blks(keys, length, key);
+	for(int i=0;i<length;i++)
+		H[i] = xorBlocks(keys[i], masks[i]);
+	
+	delete[] tweak;
+	delete[] masks;
+	delete[] keys;
+}
+
 static inline void hash_with_indices(int length,block *H,const block *A,uint64_t idx, const AES_KEY *key) {//TOOD buffer
 
 	block* tweak=new block[length];

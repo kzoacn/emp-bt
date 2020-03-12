@@ -173,28 +173,34 @@ public:
 		
 		modBlock(b.mask);
 		// a+xdeleta ->  b+ydelta
-		block xdelta[BITLENGTH];
-		block ydelta[BITLENGTH];
-		
+		static block xdelta[BITLENGTH];
+		static block ydelta[BITLENGTH];
+		static block h[2*BITLENGTH],t[2*BITLENGTH];
 
-		delta2k[BITLENGTH-1]=-delta2k[BITLENGTH-1];
+
+		
 		for(int i=0;i<length;i++){
 			 
 			xdelta[i]=addBlocks(a.mask,mulCBlocks(mdelta,x[i]));
 			ydelta[i]=addBlocks(b.mask,mulCBlocks(mdelta,y[i]));
 			
 		}
-		delta2k[BITLENGTH-1]=-delta2k[BITLENGTH-1];
+		
+ 
+		
+		for(int i=0;i<length;i++){
+			h[i*2]=xdelta[i];
+			h[i*2+1]=xorBlocks(xdelta[i],one_block());
+		}
+
+		hash_with_indices_fix(length*2,h,h,gid,&prp.aes);
 		for(int i=0;i<length;i++){
 
-			block h[2],t[2];
-			h[0]=hash_with_idx(xdelta[i],gid,&prp.aes);
-			h[1]=hash_with_idx(xorBlocks(xdelta[i],one_block()),gid,&prp.aes);
-
-			t[0]=xorBlocks(h[0],ydelta[i]);
-			t[1]=h[1]; 
-			io->send_block(t,2);
+			t[i*2]=xorBlocks(h[i*2],ydelta[i]);
+			t[i*2+1]=h[i*2+1]; 
 		}
+
+		io->send_block(t,2*length);
 		gid++;
 		//TODO shuffle
 		return b;

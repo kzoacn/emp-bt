@@ -1,6 +1,8 @@
  
 #include <emp-tool/emp-tool.h>
 #include "emp-arith/emp-arith.h"
+#include "emp-arith/arithmetic_gen.h"
+#include "emp-arith/arithmetic_eva.h"
 using namespace emp;
 using namespace std;
 
@@ -43,11 +45,11 @@ Number tab[maxn][maxn];
 int f[maxn][maxn];
 
 int pa[maxn],pb[maxn];
+ 
 
 int main(int argc, char** argv) {
 	parse_party_and_port(argv, &party, &port);
-	io = new NetIO(party==ALICE ? nullptr : "127.0.0.1", port);
-
+	io = new NetIO(party==ALICE ? nullptr : "127.0.0.1", port); 
 	setup_arithmetic(io, party); 
 	for(int i=0;i<10;i++){
 		min_x[i]=i%2==0?i/2:-((i+1)/2);
@@ -57,7 +59,7 @@ int main(int argc, char** argv) {
 		zero_y[i]= zero_x[i]!=0; 
 	}
  
-    int n=1000,m=1000;
+    int n=1000,m=1000; 
 
     for(int i=1;i<=n;i++){
         pa[i]=rand()%4;
@@ -67,7 +69,7 @@ int main(int argc, char** argv) {
         b[i]=Number(BITLENGTH,pb[i],BOB);
     }
 
-   /* if(party==ALICE){
+/*    if(party==ALICE){
         for(int i=1;i<=n;i++)
             printf("%d%c",pa[i]," \n"[i==n]);
     }
@@ -83,8 +85,7 @@ int main(int argc, char** argv) {
     }
 
 
-    double st=clock();
-
+    
     for(int i=0;i<=n;i++)
         dp[i][0]=Number(BITLENGTH,i,ALICE);
     for(int i=0;i<=m;i++)
@@ -92,6 +93,9 @@ int main(int argc, char** argv) {
 
     Number c_del(BITLENGTH,1,ALICE);
     Number c_ins(BITLENGTH,1,ALICE); 
+
+
+double st=clock();
 
     for(int i=1;i<=n;i++){
         for(int j=1;j<=m;j++){

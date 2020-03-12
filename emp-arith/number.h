@@ -47,7 +47,7 @@ class Number{ public:
     int reveal()const;
 };
 inline Number b2a(Integer x);
-//inline Integer a2b(const Number &x,int length);
+//inline Integer a2b(const Number &x,int length); 
 inline Number project(const Number &a,int length,const int *x,const int *y);// x[i] -> y[i] 
 #include "emp-arith/number.hpp"
 }
