@@ -59,6 +59,7 @@ int main(int argc, char** argv) {
 	port=js["port"];
 	string ip=js["ip"];
 	string input_file=js["input_file"];
+	string temporary_file=js["temporary_file"];
 	bool from_stdin=js["from_stdin"];
 
 	//parse_party_and_port(argv, &party, &port);
@@ -126,16 +127,29 @@ int main(int argc, char** argv) {
 		g1[i].resize(m+1);
 	}
 
-	for(int i=1;i<=n;i++)
-	for(int j=1;j<=m;j++){
-		f[i][j]=max(f[i][j-1]-2,f[i-1][j]-2);
-		
-		g0[i][j]= f[i-1][j] <= f[i][j-1] ? 1 : 0;
-		g1[i][j]= f[i][j] <= (f[i-1][j-1]+(pa[i]==pb[j]?5:-1)) ? 1 : 0;
-		
-		f[i][j]=max(f[i][j],f[i-1][j-1]+(pa[i]==pb[j]?5:-1));
+
+	ofstream tout;
+	tout.open(temporary_file,std::ios::out | std::ios::binary);
+
+
+	for(int i=1;i<=n;i++){
+		for(int j=1;j<=m;j++){
+			f[i][j]=max(f[i][j-1]-2,f[i-1][j]-2);
+			
+			g0[i][j]= f[i-1][j] <= f[i][j-1] ? 1 : 0;
+			g1[i][j]= f[i][j] <= (f[i-1][j-1]+(pa[i]==pb[j]?5:-1)) ? 1 : 0;
+
+			f[i][j]=max(f[i][j],f[i-1][j-1]+(pa[i]==pb[j]?5:-1));
+		}
+		tout.write((char*)g0[i].data(),(m+1)*sizeof(int));
+		tout.write((char*)g1[i].data(),(m+1)*sizeof(int));
 	}
-	 
+
+	tout.close(); 
+
+
+	ifstream tin;
+	tin.open(temporary_file,std::ios::in | std::ios::binary);
 
 	int nowx=n,nowy=m;
  
@@ -143,7 +157,14 @@ int main(int argc, char** argv) {
 	
 	while(nowx>=1&&nowy>=1){  
 
-		int d1=g1[nowx][nowy]; 
+		tin.seekg(2LL*(nowx-1)*(m+1)*sizeof(int)+(m+1)*sizeof(int)+nowy*sizeof(int),ios::beg);
+		int d1;
+		tin.read((char*)&d1,4);
+		//int d1=g1[nowx][nowy];
+		if(d1!=g1[nowx][nowy]){
+			puts("error");
+			return -1;
+		}
 		if(d1==1){
 			if(party==ALICE){
 				ans.push_back(mp[pa[nowx]]);
@@ -153,7 +174,14 @@ int main(int argc, char** argv) {
 
 			nowx--;nowy--;
 		}else{
-			int d2=g0[nowx][nowy];
+			tin.seekg(2LL*(nowx-1)*(m+1)*sizeof(int)+nowy*sizeof(int),ios::beg);
+			int d2;
+			tin.read((char*)&d2,4);
+			if(d2!=g0[nowx][nowy]){
+				puts("error");
+				return 0;
+			}
+			//int d2=g0[nowx][nowy];
 			if(d2==0){
 				if(party==ALICE){
 					ans.push_back(mp[pa[nowx]]);
