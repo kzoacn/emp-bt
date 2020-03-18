@@ -29,8 +29,8 @@ int pa[maxn],pb[maxn];
 */
 
 vector<vector<int> >f;
-vector<vector<int> >g0;
-vector<vector<int> >g1;
+vector<int>g0;
+vector<int>g1;
 vector<int>pa;
 vector<int>pb;
 
@@ -118,14 +118,12 @@ int main(int argc, char** argv) {
 
 
 
-	f.resize(n+1);
-	g0.resize(n+1);
-	g1.resize(n+1);
-	for(int i=0;i<=n;i++){
-		f[i].resize(m+1);
-		g0[i].resize(m+1);
-		g1[i].resize(m+1);
-	}
+	f.resize(2);
+	g0.resize(m+1);
+	g1.resize(m+1);
+
+	f[0].resize(m+1);
+	f[1].resize(m+1);
 
 
 	ofstream tout;
@@ -133,16 +131,18 @@ int main(int argc, char** argv) {
 
 
 	for(int i=1;i<=n;i++){
+		int cur=i&1;
+		int pre=cur^1;
 		for(int j=1;j<=m;j++){
-			f[i][j]=max(f[i][j-1]-2,f[i-1][j]-2);
+			f[cur][j]=max(f[cur][j-1]-2,f[pre][j]-2);
 			
-			g0[i][j]= f[i-1][j] <= f[i][j-1] ? 1 : 0;
-			g1[i][j]= f[i][j] <= (f[i-1][j-1]+(pa[i]==pb[j]?5:-1)) ? 1 : 0;
+			g0[j]= f[pre][j] <= f[cur][j-1] ? 1 : 0;
+			g1[j]= f[cur][j] <= (f[pre][j-1]+(pa[i]==pb[j]?5:-1)) ? 1 : 0;
 
-			f[i][j]=max(f[i][j],f[i-1][j-1]+(pa[i]==pb[j]?5:-1));
+			f[cur][j]=max(f[cur][j],f[pre][j-1]+(pa[i]==pb[j]?5:-1));
 		}
-		tout.write((char*)g0[i].data(),(m+1)*sizeof(int));
-		tout.write((char*)g1[i].data(),(m+1)*sizeof(int));
+		tout.write((char*)g0.data(),(m+1)*sizeof(int));
+		tout.write((char*)g1.data(),(m+1)*sizeof(int));
 	}
 
 	tout.close(); 
@@ -160,11 +160,7 @@ int main(int argc, char** argv) {
 		tin.seekg(2LL*(nowx-1)*(m+1)*sizeof(int)+(m+1)*sizeof(int)+nowy*sizeof(int),ios::beg);
 		int d1;
 		tin.read((char*)&d1,4);
-		//int d1=g1[nowx][nowy];
-		if(d1!=g1[nowx][nowy]){
-			puts("error");
-			return -1;
-		}
+		
 		if(d1==1){
 			if(party==ALICE){
 				ans.push_back(mp[pa[nowx]]);
@@ -177,11 +173,7 @@ int main(int argc, char** argv) {
 			tin.seekg(2LL*(nowx-1)*(m+1)*sizeof(int)+nowy*sizeof(int),ios::beg);
 			int d2;
 			tin.read((char*)&d2,4);
-			if(d2!=g0[nowx][nowy]){
-				puts("error");
-				return 0;
-			}
-			//int d2=g0[nowx][nowy];
+			
 			if(d2==0){
 				if(party==ALICE){
 					ans.push_back(mp[pa[nowx]]);

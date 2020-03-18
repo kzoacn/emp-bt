@@ -1,3 +1,4 @@
+./data/*.tmp
 *.data
 bin/*
 perf.data
