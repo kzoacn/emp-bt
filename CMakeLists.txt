@@ -26,6 +26,7 @@ install(FILES cmake/emp-arith-config.cmake DESTINATION cmake/)
 install(DIRECTORY emp-arith DESTINATION include/)
 install(TARGETS ${NAME} DESTINATION lib/)
 
+
 # Test cases
 macro (add_test _name)
   add_executable(${_name} "test/${_name}.cpp")
@@ -34,4 +35,5 @@ endmacro()
  
 add_test (simple) 
 add_test (sw) 
+add_test (sw_plain) 
 add_test (editdis) 

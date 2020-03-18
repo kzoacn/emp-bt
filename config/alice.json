@@ -1,0 +1,7 @@
+{
+	"party": 1,
+	"port" : 12345,
+	"ip" : "127.0.0.1",
+	"input_file" : "./data/alice.in",
+	"from_stdin" : false
+}

@@ -1,0 +1,2 @@
+#!/bin/bash
+(sleep 0.05; $1 ./config/alice.json) &  $1 ./config/bob.json
