@@ -172,10 +172,13 @@ int main(int argc, char** argv) {
 	ofstream tout;
 	tout.open(temporary_file,std::ios::out | std::ios::binary);
 
+	for(int i=1;i<=m;i++)
+		dp[0][i]=Number(BITLENGTH,-i,ALICE);
 	for(int i=1;i<=n;i++){
 		int cur=i&1;
 		int pre=cur^1;
         Number t;
+		dp[cur][0]=Number(BITLENGTH,-i,ALICE);
 		for(int j=1;j<=m;j++){
 			t=s_value(a[i],b[j]);
             dp[cur][j]=t_max(dp[pre][j],dp[cur][j-1])-two;
@@ -234,6 +237,20 @@ int main(int argc, char** argv) {
 				nowy--;
 			}
 		}
+	}
+	while(nowx>=1){
+		if(party==ALICE)
+			ans.push_back(mp[pa[nowx]]);
+		else
+			ans.push_back('-');
+		nowx--;
+	}
+	while(nowy>=1){
+		if(party==ALICE)
+			ans.push_back('-');	
+		else
+			ans.push_back(mp[pb[nowy]]);
+		nowy--;
 	}
 
 	reverse(ans.begin(),ans.end());
