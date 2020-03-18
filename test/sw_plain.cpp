@@ -17,17 +17,7 @@ int port, party;
 NetIO * io;
  
  
-
-/*
-const int maxn=1010; 
-
-int f[maxn][maxn];
-int g0[maxn][maxn];
-int g1[maxn][maxn];
-
-int pa[maxn],pb[maxn];
-*/
-
+ 
 vector<vector<int> >f;
 vector<int>g0;
 vector<int>g1;
@@ -36,12 +26,7 @@ vector<int>pb;
 
 string gene;
  
-/*
-TODO:
-1.json
-2.disk
-3.improve tab
-*/
+
 const char mp[]="ATCG";
 int main(int argc, char** argv) {
 
@@ -144,7 +129,7 @@ int main(int argc, char** argv) {
 		tout.write((char*)g0.data(),(m+1)*sizeof(int));
 		tout.write((char*)g1.data(),(m+1)*sizeof(int));
 	}
-
+ 
 	tout.close(); 
 
 

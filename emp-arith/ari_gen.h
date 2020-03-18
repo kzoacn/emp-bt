@@ -161,7 +161,7 @@ public:
 
 		int ans=-233;
 
-		for(int i=0;i<3000;i++){
+		for(int i=0;i<3000;i++){//TODO !!!
 			if(t%MOD==v){
 				ans=i;
 				break;
