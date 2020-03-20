@@ -4,9 +4,9 @@
 
 ## Installation
 
-1. Install prerequisites using instructions [here](https://github.com/kzoacn/emp-readme).
-2. git clone https://github.com/emp-toolkit/emp-arith.git
-3. cd emp-arith && cmake . -DBOOST_ROOT=/usr/include/boost && sudo make install
+   1. Install prerequisites using instructions [here](https://github.com/kzoacn/emp-readme).
+   2. git clone https://github.com/emp-toolkit/emp-arith.git
+   3. cd emp-arith && cmake . -DBOOST_ROOT=/usr/include/boost && sudo make install
 
 ## Test
 
