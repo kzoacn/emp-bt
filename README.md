@@ -4,33 +4,21 @@
 
 ## Installation
 
-1. Install prerequisites using instructions [here](https://github.com/emp-toolkit/emp-readme).
-2. Install [emp-tool](https://github.com/emp-toolkit/emp-tool).
-3. Install [emp-ot](https://github.com/emp-toolkit/emp-ot).
-4. git clone https://github.com/emp-toolkit/emp-arith.git
-5. cd emp-arith && cmake . && sudo make install
+1. Install prerequisites using instructions [here](https://github.com/kzoacn/emp-readme).
+2. git clone https://github.com/emp-toolkit/emp-arith.git
+3. cd emp-arith && cmake . -DBOOST_ROOT=/usr/include/boost && sudo make install
 
 ## Test
 
-* If you want to test the code in local machine, type
+* ./bin/sw_plain是明文的计算, ./bin/sw是加密的
 
-   `./run ./bin/[binaries] 12345 [more opts]`
-* IF you want to test the code over two machine, type
+* 在本地运行两方计算
 
-  `./bin/[binaries] 1 12345 [more opts]` on one machine and 
+   `./execute ./bin/sw`
+* 若要在两台设备之间计算,修改./config中的配置文件中的ip,填入对方的设备ip
+
+  `./bin/sw alice.json` on one machine and 
   
-  `./bin/[binaries] 2 12345 [more opts]` on the other.
+  `./bin/sw bob.json` on the other.
   
-  IP address is hardcoded in the test files. Please replace
-  SERVER_IP variable to the real ip.
-
-* example_semi_honest should run as 
-	`./bin/example 1 12345 123 & ./bin/example 2 12345 124`
-	
-	because different parrties needs different numbers
-
-### Question
-Please send email to wangxiao@cs.umd.edu
-
-## Acknowledgement
-This work was supported in part by the National Science Foundation under Awards #1111599 and #1563722.
+* 输入数据也在配置文件中可以修改
