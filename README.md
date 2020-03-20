@@ -23,3 +23,5 @@
   `./bin/sw bob.json` on the other.
   
 * 输入数据也在配置文件中可以修改
+
+* 使用check.sh运行明文和密文算法,检验正确性
