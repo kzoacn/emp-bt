@@ -18,9 +18,9 @@
    `./execute ./bin/sw`
 * 若要在两台设备之间计算,修改./config中的配置文件中的ip,填入对方的设备ip
 
-  `./bin/sw alice.json` on one machine and 
+  `./bin/sw ./config/alice.json` on one machine and 
   
-  `./bin/sw bob.json` on the other.
+  `./bin/sw ./config/bob.json` on the other.
   
 * 输入数据也在配置文件中可以修改
 
