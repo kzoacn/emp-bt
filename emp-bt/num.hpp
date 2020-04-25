@@ -125,8 +125,8 @@ inline void div_full(Wire * vquot, Wire * vrem, const Wire * op1, const Wire * o
 inline void init(Wire * bits, const bool* b, int length, int party) {
 	bool * bbits = (bool *) bits;
 	if (party == PUBLIC) {
-		int one = Circuit_Gen::circ_exec->public_label(true,party);
-		int zero = Circuit_Gen::circ_exec->public_label(false,party);
+		int one = Circuit_Gen::circ_exec->public_label(true);
+		int zero = Circuit_Gen::circ_exec->public_label(false);
 		for(int i = 0; i < length; ++i)
 			bbits[i] = b[i] ? one : zero;
 	}

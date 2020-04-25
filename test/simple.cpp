@@ -16,15 +16,10 @@ int main(int argc, char** argv) {
 
     setup(io,party);
     const int BITLENGTH=32;
-    Number a(BITLENGTH,4,ALICE);
+    Number a(BITLENGTH,4,PUBLIC);
     Number b(BITLENGTH,12,BOB);
     
-    Wire b1(true,ALICE);
-    Wire b2(true,BOB);
 
-    Wire c=a>b;
-
-
-    cout<< c.output() <<endl;   
+    cout<< a.output() <<endl;   
 
 }

@@ -64,8 +64,8 @@ public:
 	bool not_gate(const bool& in1){ 
         return in1^mask;
     }
-	bool public_label(bool b,int party){ 
-        return party==ALICE?b:0;
+	bool public_label(bool b){ 
+        return this->party==ALICE?b:0;
     }
     bool set_input(bool b,int party){ 
         if(party==this->party)

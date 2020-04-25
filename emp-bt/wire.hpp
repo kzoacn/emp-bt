@@ -1,6 +1,6 @@
 inline Wire::Wire(bool b, int party) {
 	if (party == PUBLIC)
-		bit = Circuit_Gen::circ_exec->public_label(b,party);
+		bit = Circuit_Gen::circ_exec->public_label(b);
 	else{
 		//  b must be 0 if this is not your
 		bit = Circuit_Gen::circ_exec->set_input(b,party);

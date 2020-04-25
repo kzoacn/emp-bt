@@ -11,7 +11,7 @@ using namespace emp;
  
 
 const int seed=22;
-int n=3,m=3;
+int n=50,m=50;
 
 const char mp[]="ATCG";
 void plain(void *ctx) {
@@ -25,17 +25,13 @@ void plain(void *ctx) {
     srand(seed);
 	pa.resize(n+1);
 	for(int i=0;i<n;i++){
-        pa[i+1]=rand()%4;
-        std::cerr<<pa[i+1]<<" ";
-	} 
-    std::cerr<<endl;
+        pa[i+1]=rand()%4; 
+	}  
 	
     pb.resize(m+1);
 	for(int i=0;i<m;i++){
-        pb[i+1]=rand()%4;
-        std::cerr<<pb[i+1]<<" ";
-	} 
-    std::cerr<<endl;
+        pb[i+1]=rand()%4; 
+	}  
 
 
 	f.resize(2);
@@ -102,7 +98,7 @@ void code(void *ctx) {
 	Number five(BITLENGTH,5,PUBLIC);
 	Number mone(BITLENGTH,-1,PUBLIC);
  
-
+ 
 	dp.resize(2);
 	arg0.resize(m+1);
 	arg1.resize(m+1);
@@ -122,10 +118,12 @@ void code(void *ctx) {
             dp[cur][j]=dp[pre][j].select(arg0[j],dp[cur][j-1])-two;
             arg1[j]= dp[cur][j]<=dp[pre][j-1]+t;
             dp[cur][j]=dp[cur][j].select(arg1[j],dp[pre][j-1]+t);
+
+
         } 
     }
 
-    //cout<< dp[n&1][m].output() <<std::endl;;
+    cout<< dp[n&1][m].output() <<std::endl;
 }
 int main(int argc, char** argv) {
 	int party,port;
@@ -134,8 +132,7 @@ int main(int argc, char** argv) {
 
     setup(io,party);
 
-    if(party==ALICE)
-        plain(NULL);
+     plain(NULL);
  
     code(NULL);
 }
