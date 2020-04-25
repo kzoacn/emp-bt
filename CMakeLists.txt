@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 2.8.11)
-project (emp-arith)
-set(NAME "emp-arith")
+project (emp-bt)
+set(NAME "emp-bt")
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	if(NOT DEFINED OPENSSL_ROOT_DIR)
 		set(OPENSSL_ROOT_DIR "/usr/local/opt/openssl")	
@@ -17,13 +17,13 @@ find_package(emp-ot REQUIRED)
 include_directories(${EMP-OT_INCLUDE_DIRS})
 
 set(sources
- emp-arith/emp-arith.cpp
+ emp-bt/emp-bt.cpp
 )
 add_library(${NAME} SHARED ${sources})
 
 # Installation
-install(FILES cmake/emp-arith-config.cmake DESTINATION cmake/)
-install(DIRECTORY emp-arith DESTINATION include/)
+install(FILES cmake/emp-bt-config.cmake DESTINATION cmake/)
+install(DIRECTORY emp-bt DESTINATION include/)
 install(TARGETS ${NAME} DESTINATION lib/)
 
 
@@ -34,6 +34,3 @@ macro (add_test _name)
 endmacro()
  
 add_test (simple) 
-add_test (sw) 
-add_test (sw_plain) 
-add_test (editdis) 

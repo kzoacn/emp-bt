@@ -1,13 +1,13 @@
 find_package(emp-ot)
 
-find_path(emp-arith_INCLUDE_DIR emp-arith/emp-arith.h)
+find_path(emp-bt_INCLUDE_DIR emp-bt/emp-bt.h)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(emp-arith DEFAULT_MSG emp-arith_INCLUDE_DIR)
+find_package_handle_standard_args(emp-bt DEFAULT_MSG emp-bt_INCLUDE_DIR)
 
-find_library(EMP-arith_LIBRARY NAMES emp-arith)
+find_library(emp-bt_LIBRARY NAMES emp-bt)
 
-if(emp-arith_FOUND)
-	set(emp-arith_INCLUDE_DIRS ${emp-arith_INCLUDE_DIR}/include/ ${EMP-OT_INCLUDE_DIRS})
-	set(EMP-arith_LIBRARIES ${EMP-OT_LIBRARIES} ${EMP-arith_LIBRARY}$)
+if(emp-bt_FOUND)
+	set(emp-bt_INCLUDE_DIRS ${emp-bt_INCLUDE_DIR}/include/ ${EMP-OT_INCLUDE_DIRS})
+	set(emp-bt_LIBRARIES ${EMP-OT_LIBRARIES} ${emp-bt_LIBRARY}$)
 endif()
