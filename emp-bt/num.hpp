@@ -204,8 +204,19 @@ inline Number::Number(int len, long long input, int party)
 
 inline Number Number::select(const Wire & select, const Number & a) const{
 	Number res(*this);
-	for(int i = 0; i < size(); ++i)
-		res[i] = bits[i].select(select, a[i]);
+	
+	Wire in1[64],in2[64],out[64];
+	
+	for(int i=0;i<size();i++){
+		Wire tmp = bits[i];
+		tmp = tmp ^ a[i];
+		in1[i]=tmp;
+		in2[i]=select;
+	}
+	ands(out,in1,in2,size());
+	for(int i = 0; i < size(); ++i){
+		res[i]= bits[i] ^ out[i];
+	}
 	return res;
 }
 
