@@ -11,7 +11,7 @@ namespace emp{
 class Circuit_Gen { 
 
 public: 
-	static Circuit_Gen * circ_exec; 
+	static __thread Circuit_Gen * circ_exec; 
     NetIO *io;
     int party;
     bool mask;
@@ -58,6 +58,36 @@ public:
         //printf("%d %d %d %d %d\n",e,d,x1,y1,(int)res);
         return res;    
     }
+
+	void and_gate(int length,bool *x1, bool *y1,bool *xy){ 
+
+        bool a1[64],b1[64],c1[64];
+        
+        bool e1[64],d1[64];
+        bool e2[64],d2[64];
+
+        for(int i=0;i<length;i++){
+            a1[i]=b1[i]=c1[i]=0;
+            e1[i]=x1[i]^a1[i];
+            d1[i]=y1[i]^b1[i];
+        }
+        if(this->party==ALICE){
+            io->send_data(e1,length);
+            io->send_data(d1,length);
+            io->recv_data(e2,length);
+            io->recv_data(d2,length);
+        }else{
+            io->recv_data(e2,length);   
+            io->recv_data(d2,length);
+            io->send_data(e1,length);
+            io->send_data(d1,length);    
+        }
+        
+        for(int i=0;i<length;i++){
+            bool e=e1[i]^e2[i],d=d1[i]^d2[i];
+            xy[i]=c1[i]^(e&y1[i])^(d&x1[i])^(e&d&mask);
+        }
+    }
 	bool xor_gate(const bool&in1, const bool&in2){ 
         return in1^in2;
     }
@@ -88,7 +118,7 @@ public:
 	~Circuit_Gen (){ }
 }; 
 
-emp::Circuit_Gen* emp::Circuit_Gen::circ_exec = nullptr; 
+__thread emp::Circuit_Gen* emp::Circuit_Gen::circ_exec = nullptr; 
 
 void setup(NetIO *io,int party){
     io->set_nodelay();

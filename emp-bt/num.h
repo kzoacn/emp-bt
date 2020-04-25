@@ -93,6 +93,7 @@ class Number : public Swappable<Number>, public Comparable<Number> { public:
 	Number operator%(const Number& rhs)const;
 	Number operator&(const Number& rhs)const;
 	Number operator|(const Number& rhs)const;
+	Number operator~()const;
 
 	Wire& operator[](int index);
 	const Wire & operator[](int index) const;

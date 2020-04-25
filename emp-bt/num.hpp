@@ -28,6 +28,54 @@ inline void add_full(Wire* dest, Wire * carryOut, const Wire * op1, const Wire *
 	else
 		dest[i] = carry ^ op2[i] ^ op1[i];
 }
+
+inline void KoggeStone_adder(Wire * dest, const Wire * op1, const Wire * op2,int size,const Wire *carry1in) {
+    // size=2^k
+
+    Wire g[64],p[64],tmp1[64],tmp2[64],tmp3[64];
+    Wire p1,p2,g1,g2;
+    for(int i=0;i<size;i++){
+        p[i]=op1[i]^op2[i];
+        g[i]=op1[i]&op2[i];
+    }
+ 
+    for(int h=0;(1<<h)<size;h++){
+        int l=1<<h,len=0;
+        for(int i=size-1;i>=l;i--){;
+            p1=p[i];p2=p[i-l];
+            g1=g[i];g2=g[i-l];
+			
+			tmp1[len]=p1;
+			tmp2[len]=g2;
+			len++;
+			
+			tmp1[len]=p1;
+			tmp2[len]=p2;
+			len++;
+			
+            //g[i]=g1^(p1&g2);
+            //p[i]=p1&p2;
+        } 
+		ands(tmp3,tmp1,tmp2,len);
+
+		len=0;
+        for(int i=size-1;i>=l;i--){ 
+            g[i]=g[i]^tmp3[len++];
+            p[i]=tmp3[len++];
+        } 
+
+    }
+	if(carry1in==nullptr){
+		dest[0]=op1[0]^op2[0];
+		for(int i=1;i<size;i++)
+			dest[i]=g[i-1]^op1[i]^op2[i];
+	}else{
+		dest[0]=op1[0]^op2[0]^Wire(1,PUBLIC);
+		for(int i=1;i<size;i++)
+			dest[i]=g[i-1]^p[i-1]^op1[i]^op2[i];
+	}
+}
+
 inline void sub_full(Wire * dest, Wire * borrowOut, const Wire * op1, const Wire * op2,
 		const Wire * borrowIn, int size) {
 	Wire borrow,bxc,bxa,t;
@@ -286,14 +334,18 @@ inline Wire Number::equal(const Number& rhs) const {
 inline Number Number::operator+(const Number & rhs) const {
 	assert(size() == rhs.size());
 	Number res(*this);
-	add_full(res.bits, nullptr, bits, rhs.bits, nullptr, size());
+	//add_full(res.bits, nullptr, bits, rhs.bits, nullptr, size());
+	KoggeStone_adder(res.bits,bits, rhs.bits, size(),nullptr);
 	return res;
 }
 
 inline Number Number::operator-(const Number& rhs) const {
 	assert(size() == rhs.size());
 	Number res(*this);
-	sub_full(res.bits, nullptr, bits, rhs.bits, nullptr, size());
+	//sub_full(res.bits, nullptr, bits, rhs.bits, nullptr, size());
+	Number r=~rhs;
+	Wire one(1,PUBLIC);
+	KoggeStone_adder(res.bits,bits, r.bits, size(),&one);
 	return res;
 }
 
@@ -373,6 +425,13 @@ inline Number Number::modExp(Number p, Number q) {
 		Number tmp = (res * base) % q;
 		res = res.select(p[i], tmp);
 		base = (base*base) % q; 
+	}
+	return res;
+}
+inline Number Number::operator~()const{
+	Number res(*this);
+	for(int i=0;i<length;i++){
+		res[i]=!bits[i];
 	}
 	return res;
 }

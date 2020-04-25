@@ -35,3 +35,5 @@ endmacro()
  
 add_test (simple) 
 add_test (sw) 
+add_test (test) 
+add_test (brent) 

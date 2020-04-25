@@ -10,8 +10,8 @@ using namespace emp;
  
  
 
-const int seed=22;
-int n=50,m=50;
+const int seed=255;
+int n=100,m=100;
 
 const char mp[]="ATCG";
 void plain(void *ctx) {

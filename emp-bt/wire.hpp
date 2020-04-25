@@ -29,6 +29,9 @@ inline Wire Wire::operator &(const Wire& rhs) const{
 	res.bit = Circuit_Gen::circ_exec->and_gate(bit, rhs.bit);
 	return res;
 }
+void ands(Wire* z,const Wire* x,const Wire* y,int length){ 
+	Circuit_Gen::circ_exec->and_gate(length,(bool*)x,(bool*)y,(bool*)z); 
+}
 inline Wire Wire::operator ^(const Wire& rhs) const{
 	Wire res;
 	res.bit = Circuit_Gen::circ_exec->xor_gate(bit, rhs.bit);
