@@ -23,9 +23,7 @@ public:
     }
  
 
-    long long num_gate, num_wire, n1, n2, n3;
-    long long cur_n1,cur_n2,cur_n3;
-    long long cur;
+    long long num_gate, data_size;
     
 	bool and_gate(const bool& x1, const bool& y1){ 
         /*
@@ -34,7 +32,8 @@ public:
             default all zero
         */
        bool a1=false,b1=false,c1=false;
-
+        num_gate++;
+        data_size+=2;
         /*
             e=open(x+a)
             d=open(y+b)
@@ -60,7 +59,8 @@ public:
     }
 
 	void and_gate(int length,bool *x1, bool *y1,bool *xy){ 
-
+        num_gate++;
+        data_size+=2*length;       
         bool a1[64],b1[64],c1[64];
         
         bool e1[64],d1[64];

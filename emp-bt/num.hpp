@@ -32,12 +32,18 @@ inline void add_full(Wire* dest, Wire * carryOut, const Wire * op1, const Wire *
 inline void KoggeStone_adder(Wire * dest, const Wire * op1, const Wire * op2,int size,const Wire *carry1in) {
     // size=2^k
 
-    Wire g[64],p[64],tmp1[64],tmp2[64],tmp3[64];
+    Wire g[64],p[64],in1[64],in2[64],out[64];
     Wire p1,p2,g1,g2;
     for(int i=0;i<size;i++){
         p[i]=op1[i]^op2[i];
-        g[i]=op1[i]&op2[i];
+        //g[i]=op1[i]&op2[i];
     }
+    for(int i=0;i<size;i++){
+		in1[i]=op1[i];
+		in2[i]=op2[i];
+	}
+	ands(g,in1,in2,size);
+
  
     for(int h=0;(1<<h)<size;h++){
         int l=1<<h,len=0;
@@ -45,23 +51,23 @@ inline void KoggeStone_adder(Wire * dest, const Wire * op1, const Wire * op2,int
             p1=p[i];p2=p[i-l];
             g1=g[i];g2=g[i-l];
 			
-			tmp1[len]=p1;
-			tmp2[len]=g2;
+			in1[len]=p1;
+			in2[len]=g2;
 			len++;
 			
-			tmp1[len]=p1;
-			tmp2[len]=p2;
+			in1[len]=p1;
+			in2[len]=p2;
 			len++;
 			
             //g[i]=g1^(p1&g2);
             //p[i]=p1&p2;
         } 
-		ands(tmp3,tmp1,tmp2,len);
+		ands(out,in1,in2,len);
 
 		len=0;
         for(int i=size-1;i>=l;i--){ 
-            g[i]=g[i]^tmp3[len++];
-            p[i]=tmp3[len++];
+            g[i]=g[i]^out[len++];
+            p[i]=out[len++];
         } 
 
     }
@@ -335,8 +341,11 @@ inline Wire Number::geq (const Number& rhs) const {
 inline Wire Number::equal(const Number& rhs) const {
 	assert(size() == rhs.size());
 	Wire res(true);
+	 
+
 	for(int i = 0; i < size(); ++i)
 		res = res & (bits[i] == rhs[i]);
+
 	return res;
 }
 

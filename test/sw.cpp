@@ -10,7 +10,7 @@ using namespace emp;
  
  
 
-const int seed=255;
+const int seed=25;
 int n=100,m=100;
 
 const char mp[]="ATCG";
@@ -91,10 +91,10 @@ void code(void *ctx) {
 	b.resize(m+1); 
 
     for(int i=1;i<=n;i++){ 
-        a[i]=Number(BITLENGTH,pa[i],ALICE); 
+        a[i]=Number(4,pa[i],ALICE); 
     }
     for(int i=1;i<=m;i++){  
-        b[i]=Number(BITLENGTH,pb[i],BOB);
+        b[i]=Number(4,pb[i],BOB);
     } 
  
 	Number two(BITLENGTH,2,PUBLIC);
@@ -127,6 +127,9 @@ void code(void *ctx) {
     }
 
     cout<< dp[n&1][m].output() <<std::endl;
+
+    cout<<"depth "<<Circuit_Gen::circ_exec->num_gate <<endl;
+    cout<<"size "<<Circuit_Gen::circ_exec->data_size <<endl;
 }
 int main(int argc, char** argv) {
 	int party,port;
